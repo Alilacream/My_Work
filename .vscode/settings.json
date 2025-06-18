@@ -1,0 +1,10 @@
+
+{
+  "editor.fontSize": 14,
+  "vim.insertModeKeyBindings": [
+    {
+      "before": ["<Tab>"],
+      "commands": ["tab"]
+    }
+  ]
+}
