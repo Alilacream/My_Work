@@ -14,8 +14,8 @@ func Merge_IT(pairs Pair, g int , d int){
 func rapid(pairs Pair, g int, m int, d int){
 	n1 := m-g+1
 	n2 := d-m
-	var pg [n1]Pair
-	var pg [n2]Pair
+	pg := make([]Pair, n1)	
+	pd := make([]Pair, n2)
 	 for i:= g; i < split;i++{
 		pg[i] = pairs[i]
 	}
