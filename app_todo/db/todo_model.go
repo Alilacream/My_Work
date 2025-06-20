@@ -1,13 +1,11 @@
 package db 
 
-import(
-	"database/sql"
-	"log"
-)
+
 type Todo struct {
 	ID int `json:"id"`
-	Purpose string `json:"purpose`
-	Done bool `json:""done`
+	Purpose string `json:"purpose"`
+	
+	Done bool `json:"done"`
 }
 // Create CRUD
 func AddTodo(purpose string)error {
@@ -29,17 +27,17 @@ func GetTodos() ([]Todo,error) {
 		if err != nil {
 		return nil , err
 		}
+		todos = append(todos, t)
 	}
-	todos = append(todos, t)
 	return todos, nil
 }
 // delete CRUD
 func DeleteTodo(id int) error {
-	_, err := DB.Exec("DELETE FROM todos WHERE id == ?", id)
+	_, err := DB.Exec("DELETE FROM todos WHERE id = ?", id)
 	return err
 } 
 
-func UpdateTodo(id int, done bool) {
-	_, err:= DB.Exec("UPDATE todos SET done == ? WHERE id == ?", done,id)
+func UpdateTodo(id int, done bool) error  {
+	_, err:= DB.Exec("UPDATE todos SET done = ? WHERE id = ?", done,id)
 	return err
 }
