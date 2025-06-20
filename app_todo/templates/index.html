@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo App</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <h1>My Todo App</h1>
+    <form id="add-form">
+        <input type="text" id="purpose" placeholder="New todo..." required>
+        <button type="submit">Add</button>
+    </form>
+    <br>
+    <table id="todo-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Purpose</th>
+                <th>Done</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Todos will be loaded here -->
+        </tbody>
+    </table>
+    <script src="/static/todo.js"></script>
+</body>
+</html>
