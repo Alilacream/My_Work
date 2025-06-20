@@ -1,18 +1,21 @@
 package handlers
 
 import (
-	"github.com/gofiber/fiber/v2"
+	"github.com/gin-gonic/gin"
 	"strconv"
 	"todo/db"
+	"net/http"
+
 )
 
 // Handler for GET /todo
-func Handler(c *fiber.Ctx) error {
+func Handler(ctx *gin.Context)  {
 	todos, err := db.GetTodos()
 	if err != nil {
-		return c.Status(500).SendString("failed to get todos\n")
+		 ctx.String(http.StatusBadRequest,"failed to get todos\n")
+		 return
 	}
-	return c.JSON(todos)
+	ctx.JSON(http.StatusOK, todos)	
 }
 
 type Requirement struct {
@@ -24,50 +27,58 @@ type Completed struct {
 }
 
 // Handler for POST /todo
-func AddTodo(ctx *fiber.Ctx) error {
+func AddTodo(ctx *gin.Context)  {
 	var req Requirement
 
-	err := ctx.BodyParser(&req)
+	err := ctx.BindJSON(&req)
 	if err != nil {
-		return ctx.Status(400).SendString("Invalid input")
+		 ctx.String(http.StatusNotFound,"Invalid input")
+		return
 	}
 	if req.Purpose == "" {
-		return ctx.Status(400).SendString("Todo empty.")
+		 ctx.String(http.StatusNotFound,"Todo empty.")
+		return 
 	}
 	err = db.AddTodo(req.Purpose)
 	if err != nil {
-		return ctx.Status(500).SendString("Invalid Todo: couldn't be added")
+		 ctx.String(http.StatusBadRequest,"Invalid Todo: couldn't be added")
+		 return
 	}
-	return ctx.Status(200).SendString("Added Todo list")
+	 ctx.String(http.StatusOK,"Added Todo list")
 }
 
 // Handler for DELETE /todo/:id
-func DeleteTodo(ctx *fiber.Ctx) error {
+func DeleteTodo(ctx *gin.Context)  {
 	String_id := ctx.Param("id")
 	Number_id, err := strconv.Atoi(String_id)
 	if err != nil {
-		return ctx.Status(500).SendString("Invalid input: not a number ID")
+		ctx.String(http.StatusBadRequest,"Invalid input: not a number ID")
+		return
 	}
 	if err := db.DeleteTodo(Number_id); err != nil {
-		return ctx.Status(400).SendString("Id does not exist")
+		 ctx.String(http.StatusNotFound,"Id does not exist")
+		return
 	}
-	return ctx.JSON(fiber.Map{"message": "The todo is fully deleted successfully."})
+	ctx.JSON(http.StatusOK, gin.H{"message": "the todo is deleted succesfully"})
 }
 
 // Handler for PATCH /todo/:id
-func Update(ctx *fiber.Ctx) error {
+func Update(ctx *gin.Context)  {
 	String_id := ctx.Param("id")
 	Number_id, err := strconv.Atoi(String_id)
 	if err != nil {
-		return ctx.Status(500).SendString("Invalid input: not a number ID")
+		 ctx.String(http.StatusBadRequest,"Invalid input: not a number ID")
+		return
 	}
 	var req Completed
-	err = ctx.BodyParser(&req)
+	err = ctx.BindJSON(&req)
 	if err != nil {
-		return ctx.Status(400).SendString("Failed to parse Body")
+		 ctx.String(http.StatusNotFound,"Failed to parse Body")
+		return
 	}
 	if err := db.UpdateTodo(Number_id, req.Done); err != nil {
-		return ctx.Status(500).SendString("Failed to update todo")
+		 ctx.String(http.StatusBadRequest,"Failed to update todo")
+		 return
 	}
-	return ctx.SendString("Fully updated the todo")
+	 ctx.String(http.StatusOK,"Fully updated the todo")
 }

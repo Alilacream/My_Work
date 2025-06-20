@@ -2,16 +2,18 @@ package main
 
 import(
 	"todo/handlers"
-	"github.com/gofiber/fiber/v2"
+	"github.com/gin-gonic/gin"
+	"todo/db"
 )
 
 func main() {
-	app:= fiber.New()
+	db.Connect()
+	app:= gin.Default()
 
-	app.Get("/todo", handlers.Handler)
-	app.Post("/todo", handlers.AddTodo)
-	app.Delete("/todo/:id", handlers.DeleteTodo)
-	app.Patch("/todo/:id", handlers.Update)
+	app.GET("/todo", handlers.Handler)
+	app.POST("/todo", handlers.AddTodo)
+	app.DELETE("/todo/:id", handlers.DeleteTodo)
+	app.PATCH("/todo/:id", handlers.Update)
 
-	app.Listen(":3000")
+	app.Run(":3000")
 }

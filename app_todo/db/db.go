@@ -1,10 +1,10 @@
 package db 
 
 import (
-	"fmt"
-	"database/sql"
-	// "github.com/go-sql-driver/mysql"
-	"log"
+    "fmt"
+    "database/sql"
+    _ "github.com/go-sql-driver/mysql" // <-- underscore means "import for side effects"
+    "log"
 )
 
 var DB *sql.DB	
@@ -14,7 +14,7 @@ func Connect(){
 //  this format is required by the driver you're using (github.com/go-sql-driver/mysql).v
 // meaning: root:root== [username]:[password] the adress==[host]  3306:port and finally todo_DB is the database name
 	dsn := "root:root@tcp(127.0.0.1:3306)/todo" 
-	DB , err := sql.Open("mysql", dsn)
+	DB , err = sql.Open("mysql", dsn)
 	if err != nil {
 		log.Fatal("An error occured to the open of the database: ", err)
 	}
