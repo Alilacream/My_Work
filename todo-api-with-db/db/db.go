@@ -13,14 +13,17 @@ var DB *sql.DB
 
 func Connect() {
 	var err error
-	godotenv.Load()
+	err := godotenv.Load(".env")
+	if err != nil {
+		log.Fatal("Couldn't load the Env File: ",err )
+	}
 	dsn := os.Getenv("MYSQL_DSN")
 	DB, err = sql.Open("mysql", dsn)
 	if err != nil {
-		log.Fatal("Data Source Name inrecognizable.")
+		log.Fatal("Data Source Name inrecognizable: ", err)
 	}
 	if err := DB.Ping(); err != nil {
-		log.Fatal("Couldn't ping the Database.")
+		log.Fatal("Couldn't ping the Database: ", err)
 	}
 	fmt.Println("Succesfully entered the Database✅")
 }
